@@ -1,0 +1,51 @@
+export const state = {
+  museums: [],
+  items: [],
+  visits: [],
+  currentMuseum: null,
+  currentUser: null,
+  newVisitSequence: []
+};
+
+export const elements = {
+  museumSelect: document.getElementById('museumSelect'),
+  loginButton: document.getElementById('loginButton'),
+  logoutButton: document.getElementById('logoutButton'),
+  username: document.getElementById('username'),
+  password: document.getElementById('password'),
+  loginStatus: document.getElementById('loginStatus'),
+  tabButtons: Array.from(document.querySelectorAll('#tabMenu button')),
+  sections: {
+    marketplace: document.getElementById('marketplace'),
+    visits: document.getElementById('visits'),
+    editor: document.getElementById('editor')
+  },
+  searchInput: document.getElementById('searchInput'),
+  languageFilter: document.getElementById('languageFilter'),
+  priceFilter: document.getElementById('priceFilter'),
+  licenseFilter: document.getElementById('licenseFilter'),
+  clearFilters: document.getElementById('clearFilters'),
+  itemList: document.getElementById('itemList'),
+  visitList: document.getElementById('visitList'),
+  visitDetail: document.getElementById('visitDetail'),
+  newTitle: document.getElementById('newTitle'),
+  newAuthor: document.getElementById('newAuthor'),
+  newDuration: document.getElementById('newDuration'),
+  newLanguage: document.getElementById('newLanguage'),
+  newPrice: document.getElementById('newPrice'),
+  newLicense: document.getElementById('newLicense'),
+  newImage: document.getElementById('newImage'),
+  newText: document.getElementById('newText'),
+  newObject: document.getElementById('newObject'),
+  createContent: document.getElementById('createContent'),
+  editorMessage: document.getElementById('editorMessage'),
+  newVisitName: document.getElementById('newVisitName'),
+  newVisitDescription: document.getElementById('newVisitDescription'),
+  newVisitLogistics: document.getElementById('newVisitLogistics'),
+  visitItemSelect: document.getElementById('visitItemSelect'),
+  addVisitItem: document.getElementById('addVisitItem'),
+  visitSequence: document.getElementById('visitSequence'),
+  createVisit: document.getElementById('createVisit'),
+  visitMessage: document.getElementById('visitMessage'),
+  userCredits: document.getElementById('userCredits')
+};
