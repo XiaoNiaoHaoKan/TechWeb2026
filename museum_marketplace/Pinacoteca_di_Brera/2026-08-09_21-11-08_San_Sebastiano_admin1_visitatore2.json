@@ -1,0 +1,39 @@
+{
+  "id": "item-008",
+  "museumId": "brera",
+  "title": "San Sebastiano",
+  "author": "Andrea Mantegna",
+  "description": "Figura elegante di un martire circondato dalla natura e dalla luce.",
+  "room": "Sala 7",
+  "language": "medio",
+  "duration": "40s",
+  "price": 0,
+  "license": "CC BY-NC",
+  "image": "https://via.placeholder.com/320x220?text=San+Sebastiano",
+  "tags": [
+    "Mantegna",
+    "Rinascimento",
+    "Religioso"
+  ],
+  "narratives": [
+    {
+      "level": "elementare",
+      "duration": "15s",
+      "text": "Il santo è ritratto con frecce e uno sguardo sereno.",
+      "tone": "accessibile"
+    },
+    {
+      "level": "specialistico",
+      "duration": "40s",
+      "text": "La posa di San Sebastiano e la cura anatomica richiamano l’attenzione sul corpo idealizzato e sul paesaggio spazioso.",
+      "tone": "didattico"
+    },
+    {
+      "level": "infantile",
+      "duration": "3s",
+      "text": "Un uomo con delle frecce appare calmo sotto gli alberi.",
+      "tone": "semplice"
+    }
+  ],
+  "createdBy": "admin1"
+}

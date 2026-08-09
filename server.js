@@ -5,7 +5,19 @@ const cors = require('cors');
 const { MongoClient } = require('mongodb');
 
 const app = express();
-const DATA_PATH = path.join(__dirname, 'data', 'store.json');
+const DATA_DIR = path.join(__dirname, 'data');
+const DATA_FILES = {
+  museums: path.join(DATA_DIR, 'musei.json'),
+  items: path.join(DATA_DIR, 'contenuti.json'),
+  visits: path.join(DATA_DIR, 'visite.json')
+};
+const ACCOUNT_FILES = {
+  authors: path.join(DATA_DIR, 'accounts', 'autori.json'),
+  visitors: path.join(DATA_DIR, 'accounts', 'visitatori.json'),
+  admins: path.join(DATA_DIR, 'accounts', 'amministratori.json'),
+  others: path.join(DATA_DIR, 'accounts', 'altri.json')
+};
+const MARKETPLACE_ROOT = path.join(__dirname, 'museum_marketplace');
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || '';
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'artaround';
@@ -19,12 +31,107 @@ app.use(express.json());
 
 
 function readData() {
-  const text = fs.readFileSync(DATA_PATH, 'utf8');
-  return JSON.parse(text);
+  const museums = readJsonArray(DATA_FILES.museums);
+  const items = readJsonArray(DATA_FILES.items);
+  const visits = readJsonArray(DATA_FILES.visits);
+  const users = [
+    ...readJsonArray(ACCOUNT_FILES.authors),
+    ...readJsonArray(ACCOUNT_FILES.visitors),
+    ...readJsonArray(ACCOUNT_FILES.admins),
+    ...readJsonArray(ACCOUNT_FILES.others)
+  ];
+
+  return { museums, users, items, visits };
 }
 
 function saveData(data) {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
+  writeJsonArray(DATA_FILES.museums, data.museums || []);
+  writeJsonArray(DATA_FILES.items, data.items || []);
+  writeJsonArray(DATA_FILES.visits, data.visits || []);
+
+  const grouped = groupUsersByRole(data.users || []);
+  writeJsonArray(ACCOUNT_FILES.authors, grouped.authors);
+  writeJsonArray(ACCOUNT_FILES.visitors, grouped.visitors);
+  writeJsonArray(ACCOUNT_FILES.admins, grouped.admins);
+  writeJsonArray(ACCOUNT_FILES.others, grouped.others);
+}
+
+function readJsonArray(filePath) {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`File dati obbligatorio non trovato: ${filePath}`);
+  }
+
+  const text = fs.readFileSync(filePath, 'utf8');
+  if (!text.trim()) {
+    return [];
+  }
+
+  const parsed = JSON.parse(text);
+  return Array.isArray(parsed) ? parsed : [];
+}
+
+function writeJsonArray(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(value, null, 2), 'utf8');
+}
+
+function groupUsersByRole(users) {
+  return users.reduce(
+    (acc, user) => {
+      if (user.role === 'author') {
+        acc.authors.push(user);
+      } else if (user.role === 'visitor') {
+        acc.visitors.push(user);
+      } else if (user.role === 'admin') {
+        acc.admins.push(user);
+      } else {
+        acc.others.push(user);
+      }
+      return acc;
+    },
+    { authors: [], visitors: [], admins: [], others: [] }
+  );
+}
+
+function sanitizeSegment(value, fallback = 'sconosciuto') {
+  const normalized = String(value || '')
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, '_');
+  return normalized || fallback;
+}
+
+function formatDateTimeParts(date) {
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return {
+    date: `${year}-${month}-${day}`,
+    time: `${hours}-${minutes}-${seconds}`
+  };
+}
+
+function writePurchasedItemSnapshot(item, visitorUsername) {
+  const storeData = readData();
+  const fromStore = (storeData.items || []).find((entry) => entry.id === item.id);
+  const museum = (storeData.museums || []).find((entry) => entry.id === item.museumId);
+
+  const museumName = sanitizeSegment(museum?.name || item.museumId || 'museo');
+  const title = sanitizeSegment(item.title || item.id || 'contenuto');
+  const author = sanitizeSegment(item.createdBy || item.author || 'autore');
+  const visitor = sanitizeSegment(visitorUsername || 'visitatore');
+  const now = new Date();
+  const { date, time } = formatDateTimeParts(now);
+
+  const museumDir = path.join(MARKETPLACE_ROOT, museumName);
+  fs.mkdirSync(museumDir, { recursive: true });
+
+  const fileName = `${date}_${time}_${title}_${author}_${visitor}.json`;
+  const targetPath = path.join(museumDir, fileName);
+  fs.writeFileSync(targetPath, JSON.stringify(fromStore || item, null, 2), 'utf8');
 }
 
 function getNextId(entries, prefix) {
@@ -373,6 +480,13 @@ app.post('/api/purchase/item/:itemId', async (req, res) => {
   const cost = Number(item.price || 0);
   if (user.credit < cost) {
     return res.status(400).json({ error: 'Credito insufficiente.' });
+  }
+
+  try {
+    writePurchasedItemSnapshot(item, username);
+  } catch (error) {
+    console.error('Errore durante la scrittura del file acquisto:', error);
+    return res.status(500).json({ error: 'Impossibile creare il file dell\'acquisto.' });
   }
 
   const updatedUser = {
