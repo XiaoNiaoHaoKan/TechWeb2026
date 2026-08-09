@@ -31,3 +31,4 @@ Applicazione marketplace / editor per la gestione di visite museali generiche.
 - `public/style.css` - stili personalizzati
 - `data/store.json` - database locale dei musei, contenuti, visite e utenti
 
+# Scelte progettuali vedere questo [file](SCELTE_PROGETTUALI.md)
