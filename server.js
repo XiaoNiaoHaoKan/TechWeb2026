@@ -8,8 +8,12 @@ const app = express();
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILES = {
   museums: path.join(DATA_DIR, 'musei.json'),
-  items: path.join(DATA_DIR, 'contenuti.json'),
-  visits: path.join(DATA_DIR, 'visite.json')
+  legacyItems: path.join(DATA_DIR, 'contenuti.json'),
+  legacyVisits: path.join(DATA_DIR, 'visite.json')
+};
+const DATA_FILE_NAMES = {
+  items: 'contenuti.json',
+  visits: 'visite.json'
 };
 const ACCOUNT_FILES = {
   authors: path.join(DATA_DIR, 'accounts', 'autori.json'),
@@ -30,10 +34,37 @@ app.use(express.json());
 
 
 
+function getMuseumDataFilePath(museumId, type) {
+  const folderName = sanitizeSegment(museumId || 'sconosciuto');
+  return path.join(DATA_DIR, folderName, DATA_FILE_NAMES[type]);
+}
+
+function readMuseumEntries(museums, type) {
+  const entries = [];
+  const legacyPath = type === 'items' ? DATA_FILES.legacyItems : DATA_FILES.legacyVisits;
+  const museumIds = new Set((museums || []).map((museum) => museum.id));
+
+  for (const museum of museums || []) {
+    const filePath = getMuseumDataFilePath(museum.id, type);
+    if (!fs.existsSync(filePath)) {
+      continue;
+    }
+
+    entries.push(...readJsonArray(filePath));
+  }
+
+  if (fs.existsSync(legacyPath)) {
+    const legacyEntries = readJsonArray(legacyPath);
+    entries.push(...legacyEntries.filter((entry) => !museumIds.has(entry.museumId)));
+  }
+
+  return entries;
+}
+
 function readData() {
   const museums = readJsonArray(DATA_FILES.museums);
-  const items = readJsonArray(DATA_FILES.items);
-  const visits = readJsonArray(DATA_FILES.visits);
+  const items = readMuseumEntries(museums, 'items');
+  const visits = readMuseumEntries(museums, 'visits');
   const users = [
     ...readJsonArray(ACCOUNT_FILES.authors),
     ...readJsonArray(ACCOUNT_FILES.visitors),
@@ -46,8 +77,35 @@ function readData() {
 
 function saveData(data) {
   writeJsonArray(DATA_FILES.museums, data.museums || []);
-  writeJsonArray(DATA_FILES.items, data.items || []);
-  writeJsonArray(DATA_FILES.visits, data.visits || []);
+
+  const groupedItems = (data.items || []).reduce((acc, item) => {
+    const museumId = item.museumId || 'sconosciuto';
+    if (!acc[museumId]) {
+      acc[museumId] = [];
+    }
+    acc[museumId].push(item);
+    return acc;
+  }, {});
+
+  const groupedVisits = (data.visits || []).reduce((acc, visit) => {
+    const museumId = visit.museumId || 'sconosciuto';
+    if (!acc[museumId]) {
+      acc[museumId] = [];
+    }
+    acc[museumId].push(visit);
+    return acc;
+  }, {});
+
+  const museumIds = new Set([
+    ...(data.museums || []).map((museum) => museum.id),
+    ...Object.keys(groupedItems),
+    ...Object.keys(groupedVisits)
+  ]);
+
+  for (const museumId of museumIds) {
+    writeJsonArray(getMuseumDataFilePath(museumId, 'items'), groupedItems[museumId] || []);
+    writeJsonArray(getMuseumDataFilePath(museumId, 'visits'), groupedVisits[museumId] || []);
+  }
 
   const grouped = groupUsersByRole(data.users || []);
   writeJsonArray(ACCOUNT_FILES.authors, grouped.authors);

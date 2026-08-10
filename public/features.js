@@ -37,7 +37,7 @@ function renderMuseumOptions() {
     .map((museum) => `<option value="${museum.id}">${museum.name}</option>`)
     .join("");
 
-  if (!state.currentMuseum) {
+  if (!state.currentMuseum || !state.museums.some((museum) => museum.id === state.currentMuseum)) {
     state.currentMuseum = state.museums[0]?.id;
   }
 
