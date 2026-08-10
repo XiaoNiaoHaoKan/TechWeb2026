@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Area Docente</title>
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<nav>
+    <a href="Index.html">Home</a>
+    <a href="TeacherVisitEditor.html">Area Docente</a>
+</nav>
+
+<h1>Area Docente</h1>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Seleziona visita</h2>
+
+        <select id="visitSelect"></select>
+
+        <input
+            type="text"
+            id="syncCode"
+            placeholder="Nome mnemonico (es. FeniceRossa)"
+        >
+
+        <button id="saveButton">
+            Salva codice
+        </button>
+
+        <button id="quizButton">
+            Gestisci quiz
+        </button>
+
+        <button id="startButton">
+            Avvia gita
+        </button>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h2>Visite preparate</h2>
+
+    <div id="savedVisits"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="card">
+
+<h2>
+Opere della visita
+</h2>
+
+
+<div id="itemsList">
+
+</div>
+
+
+</div>
+
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/TeacherVisitEditor.js"></script>
+
+</body>
+</html>

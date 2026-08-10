@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestione Quiz</title>
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<nav>
+
+    <a href="Index.html">
+        Home
+    </a>
+
+    <a href="TeacherVisitEditor.html">
+        Area docente
+    </a>
+
+</nav>
+
+<h1>Gestione Quiz</h1>
+
+<button id="backButton">
+    Torna alla dashboard
+</button>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Nuova domanda</h2>
+
+        <input
+            id="questionInput"
+            type="text"
+            placeholder="Scrivi la domanda"
+        >
+
+        <input
+            id="answer0"
+            type="text"
+            placeholder="Risposta A"
+        >
+
+        <input
+            id="answer1"
+            type="text"
+            placeholder="Risposta B"
+        >
+
+        <input
+            id="answer2"
+            type="text"
+            placeholder="Risposta C"
+        >
+
+        <input
+            id="answer3"
+            type="text"
+            placeholder="Risposta D"
+        >
+
+        <p>Risposta corretta</p>
+
+        <select id="correctIndex">
+
+            <option value="0">A</option>
+            <option value="1">B</option>
+            <option value="2">C</option>
+            <option value="3">D</option>
+
+        </select>
+
+        <br><br>
+
+        <button id="saveButton">
+            Salva domanda
+        </button>
+
+        <button id="startQuizButton">
+            Avvia quiz
+        </button>
+
+    </div>
+
+</div>
+
+<h2>Domande del quiz</h2>
+
+<div id="quizList"></div>
+
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/TeacherQuizEditor.js"></script>
+
+</body>
+
+</html>

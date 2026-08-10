@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Il tuo museo</title>
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<nav>
+    <a href="Index.html">Home</a>
+    <a href="Items.html">Item</a>
+    <a href="Visits.html">Visite</a>
+    <a href="ChooseVisit.html">Avvia</a>
+    <a href="Museum.html">Il tuo museo</a>
+</nav>
+
+<h1>Il tuo museo</h1>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Informazioni museo</h2>
+
+        <form id="museumForm">
+            <input type="text" id="name" placeholder="Nome museo">
+            <input type="text" id="city" placeholder="Città">
+            <textarea id="description" placeholder="Descrizione"></textarea>
+
+            <h3>Sale del museo</h3>
+            <div id="roomsList"></div>
+
+            <input type="text" id="newRoom" placeholder="Nome sala">
+            <input type="text" id="newRoomDescription" placeholder="Descrizione sala">
+            <button type="button" onclick="addRoom()">Aggiungi sala</button>
+            <h3>Visite disponibili</h3>
+            <div id="visitsSelection"></div>
+
+            <button type="submit">Salva</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Mappa (logica)</h2>
+        <div id="museumMap"></div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/Museum.js"></script>
+
+</body>
+</html>

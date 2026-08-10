@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Contenuti privati</title>
+
+    <link rel="stylesheet" href="CSS/Style.css">
+
+</head>
+
+<body>
+
+<nav>
+
+    <a href="Index.html">
+        Home
+    </a>
+
+    <a id="backButton" href="#">
+        Torna alla visita
+    </a>
+
+</nav>
+
+
+<h1>
+    Contenuti privati
+</h1>
+
+
+<div class="container">
+
+    <!-- Informazioni opera -->
+
+    <div class="card">
+
+        <h2 id="itemTitle">
+            Opera
+        </h2>
+
+        <p>
+            Qui puoi aggiungere contenuti visibili solo agli studenti
+            durante questa visita sincronizzata.
+        </p>
+
+    </div>
+
+
+    <!-- Aggiunta contenuto -->
+
+    <div class="card">
+
+        <h2>
+            Nuovo contenuto
+        </h2>
+
+        <input
+            type="text"
+            id="titleInput"
+            placeholder="Titolo contenuto"
+        >
+
+        <br><br>
+
+        <select id="typeInput">
+
+            <option value="text">
+                Testo
+            </option>
+
+            <option value="image">
+                Immagine
+            </option>
+
+            <option value="pdf">
+                PDF
+            </option>
+
+            <option value="video">
+                Video
+            </option>
+
+        </select>
+
+        <br><br>
+
+        <textarea
+            id="textInput"
+            rows="6"
+            placeholder="Scrivi il testo (solo se scegli Testo)"
+        ></textarea>
+
+        <br><br>
+
+        <input
+            type="text"
+            id="urlInput"
+            placeholder="URL immagine / PDF / Video"
+        >
+
+        <br><br>
+
+        <button id="saveButton">
+            Aggiungi contenuto
+        </button>
+
+    </div>
+
+
+    <!-- Lista contenuti -->
+
+    <div class="card">
+
+        <h2>
+            Contenuti già presenti
+        </h2>
+
+        <div id="contentsList">
+
+            Nessun contenuto.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="JAVASCRIPT/API.js"></script>
+
+<script src="JAVASCRIPT/TeacherPrivateContents.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Visita</title>
+
+    <link rel="stylesheet" href="CSS/Style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ===============================
+         VISITA CORRENTE
+    ================================ -->
+
+    <div class="card">
+
+
+        <h1 id="visitTitle"></h1>
+
+
+        <hr>
+
+
+        <h2 id="itemTitle"></h2>
+
+
+        <p id="itemText"></p>
+
+
+
+        <button id="nextButton">
+            Avanti
+        </button>
+
+
+    </div>
+
+
+
+
+    <!-- ===============================
+         DOMANDA ALLA DOCENTE
+    ================================ -->
+
+
+    <div class="card">
+
+
+        <h2>
+            Hai una domanda?
+        </h2>
+
+
+
+        <textarea
+            id="questionInput"
+            placeholder="Scrivi qui la tua domanda..."
+        ></textarea>
+
+
+
+        <button id="sendQuestionButton">
+
+            Invia domanda
+
+        </button>
+
+
+    </div>
+
+
+
+
+    <!-- ===============================
+         QUIZ FINALE
+    ================================ -->
+
+<div 
+id="quizContainer"
+class="card">
+
+</div>
+
+<button id="sendQuizButton" style="display:none;">
+    Invia risposte
+</button>
+
+
+</div>
+
+
+
+<script src="JAVASCRIPT/API.js"></script>
+
+<script src="JAVASCRIPT/VisitPlayer.js"></script>
+
+
+
+</body>
+
+</html>
