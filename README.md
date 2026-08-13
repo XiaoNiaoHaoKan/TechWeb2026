@@ -21,7 +21,7 @@ Applicazione marketplace / editor per la gestione di visite museali generiche.
 1. Apri una shell nella cartella del progetto
 2. Esegui `npm install`
 3. Esegui `npm start`
-4. Apri `http://localhost:3000`
+4. Apri `http://localhost:8000`
 
 ## Struttura del progetto
 

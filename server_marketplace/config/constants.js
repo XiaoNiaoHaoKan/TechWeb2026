@@ -18,7 +18,7 @@ const ACCOUNT_FILES = {
   others: path.join(DATA_DIR, 'accounts', 'altri.json')
 };
 const MARKETPLACE_ROOT = path.join(ROOT_DIR, 'museum_marketplace');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || '';
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'artaround';
 

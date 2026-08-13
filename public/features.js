@@ -408,7 +408,7 @@ async function createContent() {
   elements.editorMessage.textContent = "Contenuto salvato con successo.";
   setTimeout(() => {
     elements.editorMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 async function createVisit() {
@@ -462,7 +462,7 @@ async function createVisit() {
   renderVisitSequence();
   setTimeout(() => {
     elements.visitMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 async function purchaseVisit(visitId) {
@@ -545,7 +545,7 @@ async function purchaseItem(itemId) {
 
   setTimeout(() => {
     elements.visitMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 async function deleteItem(itemId) {
