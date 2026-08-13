@@ -25,7 +25,7 @@ Applicazione marketplace / editor per la gestione di visite museali generiche.
 
 ## Struttura del progetto
 
-- `server.js` - server Express per API e static files
+- `server_marketplace/index.js` - server Express per API e static files
 - `index.html` - interfaccia marketplace
 - `public/app.js` - logica client-side
 - `public/style.css` - stili personalizzati

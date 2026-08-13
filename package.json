@@ -2,10 +2,10 @@
   "name": "artaround-marketplace",
   "version": "1.0.0",
   "description": "Marketplace ed editor ArtAround per musei generici.",
-  "main": "server.js",
+  "main": "server_marketplace/index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server_marketplace/index.js",
+    "dev": "nodemon server_marketplace/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
