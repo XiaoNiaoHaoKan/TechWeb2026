@@ -1,0 +1,31 @@
+{
+  "museumId": "brera",
+  "title": "ciao 2",
+  "author": "ciao",
+  "duration": "40 s",
+  "language": "medio",
+  "price": 0,
+  "license": "CC BY-NC",
+  "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+  "objectName": "è un ciao e questa è una modifica",
+  "objectId": "q234356",
+  "creationDate": "1504",
+  "style": "rinascimentale",
+  "technique": "olio",
+  "materials": "tela",
+  "provenance": "bologna",
+  "description": "Contenuto creato per è un ciao e questa è una modifica",
+  "room": "Sala editor",
+  "tags": [
+    "cs"
+  ],
+  "narratives": [
+    {
+      "level": "medio",
+      "duration": "40 s",
+      "text": "ciaoo ciaoo ciaoo"
+    }
+  ],
+  "id": "item-035",
+  "createdBy": "autore1"
+}
