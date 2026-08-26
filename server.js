@@ -8,8 +8,12 @@ const app = express();
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILES = {
   museums: path.join(DATA_DIR, 'musei.json'),
-  items: path.join(DATA_DIR, 'contenuti.json'),
-  visits: path.join(DATA_DIR, 'visite.json')
+  legacyItems: path.join(DATA_DIR, 'contenuti.json'),
+  legacyVisits: path.join(DATA_DIR, 'visite.json')
+};
+const DATA_FILE_NAMES = {
+  items: 'contenuti.json',
+  visits: 'visite.json'
 };
 const ACCOUNT_FILES = {
   authors: path.join(DATA_DIR, 'accounts', 'autori.json'),
@@ -30,10 +34,37 @@ app.use(express.json());
 
 
 
+function getMuseumDataFilePath(museumId, type) {
+  const folderName = sanitizeSegment(museumId || 'sconosciuto');
+  return path.join(DATA_DIR, folderName, DATA_FILE_NAMES[type]);
+}
+
+function readMuseumEntries(museums, type) {
+  const entries = [];
+  const legacyPath = type === 'items' ? DATA_FILES.legacyItems : DATA_FILES.legacyVisits;
+  const museumIds = new Set((museums || []).map((museum) => museum.id));
+
+  for (const museum of museums || []) {
+    const filePath = getMuseumDataFilePath(museum.id, type);
+    if (!fs.existsSync(filePath)) {
+      continue;
+    }
+
+    entries.push(...readJsonArray(filePath));
+  }
+
+  if (fs.existsSync(legacyPath)) {
+    const legacyEntries = readJsonArray(legacyPath);
+    entries.push(...legacyEntries.filter((entry) => !museumIds.has(entry.museumId)));
+  }
+
+  return entries;
+}
+
 function readData() {
   const museums = readJsonArray(DATA_FILES.museums);
-  const items = readJsonArray(DATA_FILES.items);
-  const visits = readJsonArray(DATA_FILES.visits);
+  const items = readMuseumEntries(museums, 'items');
+  const visits = readMuseumEntries(museums, 'visits');
   const users = [
     ...readJsonArray(ACCOUNT_FILES.authors),
     ...readJsonArray(ACCOUNT_FILES.visitors),
@@ -46,8 +77,35 @@ function readData() {
 
 function saveData(data) {
   writeJsonArray(DATA_FILES.museums, data.museums || []);
-  writeJsonArray(DATA_FILES.items, data.items || []);
-  writeJsonArray(DATA_FILES.visits, data.visits || []);
+
+  const groupedItems = (data.items || []).reduce((acc, item) => {
+    const museumId = item.museumId || 'sconosciuto';
+    if (!acc[museumId]) {
+      acc[museumId] = [];
+    }
+    acc[museumId].push(item);
+    return acc;
+  }, {});
+
+  const groupedVisits = (data.visits || []).reduce((acc, visit) => {
+    const museumId = visit.museumId || 'sconosciuto';
+    if (!acc[museumId]) {
+      acc[museumId] = [];
+    }
+    acc[museumId].push(visit);
+    return acc;
+  }, {});
+
+  const museumIds = new Set([
+    ...(data.museums || []).map((museum) => museum.id),
+    ...Object.keys(groupedItems),
+    ...Object.keys(groupedVisits)
+  ]);
+
+  for (const museumId of museumIds) {
+    writeJsonArray(getMuseumDataFilePath(museumId, 'items'), groupedItems[museumId] || []);
+    writeJsonArray(getMuseumDataFilePath(museumId, 'visits'), groupedVisits[museumId] || []);
+  }
 
   const grouped = groupUsersByRole(data.users || []);
   writeJsonArray(ACCOUNT_FILES.authors, grouped.authors);
@@ -519,6 +577,59 @@ app.post('/api/purchase/item/:itemId', async (req, res) => {
   res.json(safeUser);
 });
 
+async function handleDeleteVisitRequest(req, res) {
+  const username =
+    req.body?.username ||
+    req.query?.username;
+
+  if (!username) {
+    return res.status(400).json({
+      error: "Nome utente richiesto.",
+    });
+  }
+
+  const user = await getUserByName(username);
+
+  if (!user) {
+    return res.status(404).json({
+      error: "Utente non trovato.",
+    });
+  }
+
+  const visit = await getVisitById(req.params.id);
+
+  if (!visit) {
+    return res.status(404).json({
+      error: "Visita non trovata.",
+    });
+  }
+
+  const authorized =
+    user.role === "admin" ||
+    (
+      user.role === "author" &&
+      visit.createdBy === user.username
+    );
+
+  if (!authorized) {
+    return res.status(403).json({
+      error: "Non puoi eliminare questa visita.",
+    });
+  }
+
+  const deleted = await deleteVisit(visit.id);
+
+  if (!deleted) {
+    return res.status(500).json({
+      error: "Impossibile eliminare la visita.",
+    });
+  }
+
+  return res.json({
+    ok: true,
+  });
+}
+
 async function handleDeleteItemRequest(req, res) {
   const username = req.body?.username || req.query?.username;
   if (!username) {
@@ -554,27 +665,121 @@ app.delete('/api/items/:id', handleDeleteItemRequest);
 // Fallback endpoint when DELETE is blocked by proxies/clients.
 app.post('/api/items/:id/delete', handleDeleteItemRequest);
 
+app.delete(
+  "/api/visits/:id",
+  handleDeleteVisitRequest,
+);
+
+app.post(
+  "/api/visits/:id/delete",
+  handleDeleteVisitRequest,
+);
+
+
+
+app.put('/api/visits/:id', async (req, res) => {
+  const { actorUsername } = req.body;
+
+  const actor = await getUserByName(actorUsername);
+  const visit = await getVisitById(req.params.id);
+
+  if (!actor) {
+    return res.status(401).json({
+      error: 'Utente non autenticato.',
+    });
+  }
+
+  if (!visit) {
+    return res.status(404).json({
+      error: 'Visita non trovata.',
+    });
+  }
+
+  const authorized =
+    actor.role === 'admin' ||
+    (
+      actor.role === 'author' &&
+      visit.createdBy === actor.username
+    );
+
+  if (!authorized) {
+    return res.status(403).json({
+      error: 'Non puoi modificare questa visita.',
+    });
+  }
+
+  const {
+    actorUsername: ignoredActor,
+    id,
+    createdBy,
+    ...changes
+  } = req.body;
+
+  const updated = await updateVisit(
+    req.params.id,
+    changes,
+  );
+
+  res.json(updated);
+});
+
+app.put('/api/items/:id', async (req, res) => {
+  const { actorUsername } = req.body;
+
+  const actor = await getUserByName(actorUsername);
+  const item = await getItemById(req.params.id);
+
+  if (!actor) {
+    return res.status(401).json({
+      error: 'Utente non autenticato.',
+    });
+  }
+
+  if (!item) {
+    return res.status(404).json({
+      error: 'Item non trovato.',
+    });
+  }
+
+  const authorized =
+    actor.role === 'admin' ||
+    (
+      actor.role === 'author' &&
+      item.createdBy === actor.username
+    );
+
+  if (!authorized) {
+    return res.status(403).json({
+      error: 'Non puoi modificare questo item.',
+    });
+  }
+
+  const {
+    actorUsername: ignoredActor,
+    id,
+    createdBy,
+    ...changes
+  } = req.body;
+
+  const updated = await updateItem(
+    req.params.id,
+    changes,
+  );
+
+  if (!updated) {
+    return res.status(404).json({
+      error: 'Item non trovato.',
+    });
+  }
+
+  return res.json(updated);
+});
+
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'Endpoint API non trovato.' });
 });
 
 app.use(express.static(path.join(__dirname)));
-
-app.put('/api/visits/:id', async (req, res) => {
-  const updated = await updateVisit(req.params.id, req.body);
-  if (!updated) {
-    return res.status(404).json({ error: 'Visita non trovata' });
-  }
-  res.json(updated);
-});
-
-app.put('/api/items/:id', async (req, res) => {
-  const updated = await updateItem(req.params.id, req.body);
-  if (!updated) {
-    return res.status(404).json({ error: 'Item non trovato' });
-  }
-  res.json(updated);
-});
 
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'index.html'));

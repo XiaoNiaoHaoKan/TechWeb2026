@@ -18,8 +18,25 @@ export function updateLoginStatus(message, success) {
 }
 
 export function renderUserStatus() {
-  if (state.currentUser) {
-    const creditLabel = `Crediti disponibili: EUR ${state.currentUser.credit?.toFixed(2) ?? '0.00'}`;
+  const isLoggedIn = Boolean(state.currentUser);
+
+  /*
+   * Se un account è già connesso, impedisce di inserire
+   * le credenziali di un secondo account.
+   */
+  elements.username.disabled = isLoggedIn;
+  elements.password.disabled = isLoggedIn;
+  elements.loginButton.disabled = isLoggedIn;
+
+  if (isLoggedIn) {
+    const creditLabel =
+      `Crediti disponibili: EUR ${
+        state.currentUser.credit?.toFixed(2) ?? '0.00'
+      }`;
+
+    elements.username.value = '';
+    elements.password.value = '';
+
     elements.userCredits.textContent = creditLabel;
     elements.userCredits.style.display = 'block';
     elements.logoutButton.classList.remove('d-none');
@@ -59,31 +76,81 @@ export function clearCredentials() {
 }
 
 export async function loginUser() {
+  /*
+   * Impedisce il cambio diretto di account.
+   * Prima bisogna effettuare il logout.
+   */
+  if (state.currentUser) {
+    updateLoginStatus(
+      'Per cambiare account devi prima effettuare il logout.',
+      false,
+    );
+
+    return false;
+  }
+
   const username = elements.username.value.trim();
   const password = elements.password.value.trim();
 
   if (!username || !password) {
-    updateLoginStatus('Inserisci nome utente e password.', false);
+    updateLoginStatus(
+      'Inserisci nome utente e password.',
+      false,
+    );
+
     return false;
   }
 
-  const response = await fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
+  /*
+   * Evita che il pulsante venga premuto più volte
+   * mentre la richiesta è in corso.
+   */
+  elements.loginButton.disabled = true;
 
-  if (!response.ok) {
-    updateLoginStatus('Login fallito: credenziali errate.', false);
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+
+    if (!response.ok) {
+      updateLoginStatus(
+        'Login fallito: credenziali errate.',
+        false,
+      );
+
+      elements.loginButton.disabled = false;
+      return false;
+    }
+
+    state.currentUser = await response.json();
+
+    saveCredentials(username, password);
+
+    /*
+     * Ricarica la pagina: fetchData() ridisegnerà item
+     * e visite usando il ruolo del nuovo account.
+     */
+    window.location.reload();
+
+    return true;
+  } catch (error) {
+    console.error('Errore durante il login:', error);
+
+    updateLoginStatus(
+      'Impossibile effettuare il login.',
+      false,
+    );
+
+    elements.loginButton.disabled = false;
     return false;
   }
-
-  state.currentUser = await response.json();
-  saveCredentials(username, password);
-  updateLoginStatus(`Connesso come ${state.currentUser.username} (${state.currentUser.role})`, true);
-  renderUserStatus();
-  updateEditorVisibility();
-  return true;
 }
 
 export async function loadAndVerifyCredentials() {
@@ -120,10 +187,19 @@ export async function loadAndVerifyCredentials() {
 
 export function logoutUser() {
   state.currentUser = null;
+
+  /*
+   * Interrompe eventuali modifiche rimaste aperte.
+   */
+  state.editingItemId = null;
+  state.editingVisitId = null;
+  state.newVisitSequence = [];
+
   clearCredentials();
-  elements.username.value = '';
-  elements.password.value = '';
-  updateLoginStatus('Disconnesso', false);
-  renderUserStatus();
-  updateEditorVisibility();
+
+  /*
+   * Ricarica la pagina senza credenziali.
+   * Item e visite verranno mostrati in modalità ospite.
+   */
+  window.location.reload();
 }

@@ -1,0 +1,4 @@
+Le modifiche che ho apportato sono le seguenti:
+1. aggiunta la possibilità di modificare ed eliminare sia item che visite.
+2. modificata la parte visiva.
+3. prima c'era un bug: Se accedo con autore1 e creo un item, dopo sul marketplace mi appare l'opzione di modifica item, se poi cambio account e accedo con visitatore 1 posso comprare senza problemi. Poi se ricambio account e torno ad autore1, se non refresho la pagina non appare l'opzione di modifica item. la stessa cosa accade per il visitatore, sparisce l'opzione "compra item". Perciò ho modificato la gestione di login e logout applicando la modifica: Aggiungere l'opzione che se sei loggato con un account, per loggare con un'altro account devi per forza fare log out con il primo account. Dopo che hai fatto log out, fai login con il secondo account e la pagina si refresha. 

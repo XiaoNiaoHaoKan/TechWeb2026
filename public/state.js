@@ -4,7 +4,9 @@ export const state = {
   visits: [],
   currentMuseum: null,
   currentUser: null,
-  newVisitSequence: []
+  newVisitSequence: [],
+  editingItemId: null,
+  editingVisitId: null
 };
 
 export const elements = {
@@ -30,6 +32,16 @@ export const elements = {
   visitDetail: document.getElementById('visitDetail'),
   newTitle: document.getElementById('newTitle'),
   newAuthor: document.getElementById('newAuthor'),
+
+  newObjectId: document.getElementById('newObjectId'),
+  newCreationDate: document.getElementById('newCreationDate'),
+  newStyle: document.getElementById('newStyle'),
+  newTechnique: document.getElementById('newTechnique'),
+  newMaterials: document.getElementById('newMaterials'),
+  newProvenance: document.getElementById('newProvenance'),
+  newTags: document.getElementById('newTags'),
+
+
   newDuration: document.getElementById('newDuration'),
   newLanguage: document.getElementById('newLanguage'),
   newPrice: document.getElementById('newPrice'),
@@ -38,6 +50,8 @@ export const elements = {
   newText: document.getElementById('newText'),
   newObject: document.getElementById('newObject'),
   createContent: document.getElementById('createContent'),
+  cancelContentEdit: document.getElementById('cancelContentEdit'),
+  contentEditorTitle: document.getElementById('contentEditorTitle'),
   editorMessage: document.getElementById('editorMessage'),
   newVisitName: document.getElementById('newVisitName'),
   newVisitDescription: document.getElementById('newVisitDescription'),
@@ -46,6 +60,8 @@ export const elements = {
   addVisitItem: document.getElementById('addVisitItem'),
   visitSequence: document.getElementById('visitSequence'),
   createVisit: document.getElementById('createVisit'),
+  cancelVisitEdit: document.getElementById('cancelVisitEdit'),
+  visitEditorTitle: document.getElementById('visitEditorTitle'),
   visitMessage: document.getElementById('visitMessage'),
   userCredits: document.getElementById('userCredits')
 };
