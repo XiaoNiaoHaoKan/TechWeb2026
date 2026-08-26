@@ -12,6 +12,47 @@ function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+//funzioni per collegare codice identificatore a wikidata
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderObjectIdentifier(value) {
+  const identifier = String(value || "").trim();
+
+  if (!identifier) {
+    return "Non indicato";
+  }
+
+  const wikidataMatch = identifier.match(/^Q\d+$/i);
+
+  if (wikidataMatch) {
+    const wikidataId = wikidataMatch[0].toUpperCase();
+
+    return `<a href="https://www.wikidata.org/wiki/${wikidataId}"
+      target="_blank"
+      rel="noopener noreferrer">
+      ${wikidataId}
+    </a>`;
+  }
+
+  if (/^https?:\/\//i.test(identifier)) {
+    return `<a href="${escapeHtml(identifier)}"
+      target="_blank"
+      rel="noopener noreferrer">
+      Apri identificatore esterno
+    </a>`;
+  }
+
+  return escapeHtml(identifier);
+}
+
+
 //Permette di caricare in parallelo i dati dei musei, degli oggetti e delle visite dal server e aggiorna lo stato dell'applicazione. Dopo aver caricato i dati, chiama le funzioni di rendering per aggiornare l'interfaccia utente.
 async function fetchData() {
   const [museumsRes, itemsRes, visitsRes] = await Promise.all([
@@ -37,7 +78,7 @@ function renderMuseumOptions() {
     .map((museum) => `<option value="${museum.id}">${museum.name}</option>`)
     .join("");
 
-  if (!state.currentMuseum) {
+  if (!state.currentMuseum || !state.museums.some((museum) => museum.id === state.currentMuseum)) {
     state.currentMuseum = state.museums[0]?.id;
   }
 
@@ -116,6 +157,9 @@ function renderItems() {
   elements.itemList.innerHTML = filtered
     .map((item) => {
       const priceLabel = item.price === 0 ? "Gratuito" : `EUR ${item.price}`;
+
+      const canEdit =state.currentUser?.role === "author" && item.createdBy === state.currentUser.username;
+
       return `
       <div class="col-md-6">
         <div class="card item-card shadow-sm">
@@ -127,6 +171,15 @@ function renderItems() {
             <p class="small mb-2">Licenza: ${item.license} · Prezzo: ${priceLabel}</p>
             <div class="mt-auto">
               <button class="btn btn-sm btn-outline-primary w-100" data-item="${item.id}">Visualizza dettagli</button>
+
+              ${canEdit
+                ? `<button
+                    class="btn btn-sm btn-primary w-100 mt-2"
+                    data-edit-item="${item.id}">
+                    Modifica item
+                  </button>`
+                : ""}
+
             </div>
           </div>
         </div>
@@ -142,82 +195,210 @@ function renderItems() {
       );
     },
   );
+
+  Array.from(
+    elements.itemList.querySelectorAll("button[data-edit-item]"),
+  ).forEach((button) => {
+    button.addEventListener("click", () => {
+      startItemEdit(button.dataset.editItem);
+    });
+  });
+
 }
 
 //Mostra i dettagli di un oggetto selezionato, inclusi titolo, autore, descrizione, prezzo e pulsanti per l'acquisto o l'eliminazione.
 function showItemDetail(itemId) {
-  const item = state.items.find((entry) => entry.id === itemId);
+  const item = state.items.find(
+    (entry) => entry.id === itemId,
+  );
+
   if (!item) return;
 
-  const narrativeList = item.narratives
+  const narrativeList = (item.narratives || [])
     .map(
       (narrative) => `
-      <div class="mb-3">
-        <h6>${capitalize(narrative.level)} · ${narrative.duration}</h6>
-        <p>${narrative.text}</p>
-      </div>`,
+        <div class="mb-3">
+          <h6>
+            ${capitalize(narrative.level)} · ${narrative.duration}
+          </h6>
+          <p>${narrative.text}</p>
+        </div>
+      `,
     )
     .join("");
 
-  const priceLabel = item.price === 0 ? "Gratis" : `EUR ${item.price}`;
-  const isVisitor = state.currentUser?.role === "visitor";
-  const alreadyBought = !!state.currentUser?.purchases?.some(
-    (purchase) => purchase.itemId === item.id,
-  );
-  const hasCredit = state.currentUser && state.currentUser.credit >= item.price;
-  const canBuy = isVisitor && !alreadyBought && hasCredit;
+  const priceLabel =
+    item.price === 0 ? "Gratis" : `EUR ${item.price}`;
 
-  const isAdmin = state.currentUser?.role === "admin";
+  const isVisitor =
+    state.currentUser?.role === "visitor";
+
+  const alreadyBought =
+    !!state.currentUser?.purchases?.some(
+      (purchase) => purchase.itemId === item.id,
+    );
+
+  const hasCredit =
+    state.currentUser &&
+    state.currentUser.credit >= item.price;
+
+  const canBuy =
+    isVisitor &&
+    !alreadyBought &&
+    hasCredit;
+
+  const isAdmin =
+    state.currentUser?.role === "admin";
+
   const isAuthorOwner =
     state.currentUser?.role === "author" &&
     item.createdBy === state.currentUser.username;
-  const canDelete = isAdmin || isAuthorOwner;
+
+  const canDelete =
+    isAdmin || isAuthorOwner;
 
   let buyButton = "";
+
   if (isVisitor) {
-    buyButton = `<button id="buyItemButton" class="btn btn-primary w-100" ${!canBuy ? "disabled" : ""}>${alreadyBought ? "Già acquistato" : `Compra contenuto (${priceLabel})`}</button>`;
+    buyButton = `
+      <button
+        id="buyItemButton"
+        class="btn btn-primary w-100"
+        ${!canBuy ? "disabled" : ""}
+      >
+        ${
+          alreadyBought
+            ? "Già acquistato"
+            : `Compra contenuto (${priceLabel})`
+        }
+      </button>
+    `;
   } else if (!state.currentUser) {
-    buyButton =
-      '<button class="btn btn-warning w-100" disabled>Accedi come visitatore per acquistare</button>';
+    buyButton = `
+      <button
+        class="btn btn-warning w-100"
+        disabled
+      >
+        Accedi come visitatore per acquistare
+      </button>
+    `;
   }
 
   const deleteButton = canDelete
-    ? '<button id="deleteItemButton" class="btn btn-outline-danger w-100 mt-2">Elimina contenuto</button>'
+    ? `
+      <button
+        id="deleteItemButton"
+        class="btn btn-outline-danger w-100 mt-2"
+      >
+        Elimina contenuto
+      </button>
+    `
     : "";
 
   const purchaseNote = alreadyBought
-    ? '<p class="text-muted small mt-2">Hai già acquistato questo contenuto.</p>'
+    ? `
+      <p class="text-muted small mt-2">
+        Hai già acquistato questo contenuto.
+      </p>
+    `
     : "";
 
   elements.visitDetail.innerHTML = `
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start mb-3">
+      <div
+        class="d-flex justify-content-between align-items-start mb-3"
+      >
         <div>
           <h4>${item.title}</h4>
-          <p class="text-muted mb-2">${item.author} · ${item.room}</p>
+
+          <p class="text-muted mb-2">
+            ${item.author} · ${item.room}
+          </p>
         </div>
-        <span class="badge bg-info text-dark">${priceLabel}</span>
+
+        <span class="badge bg-info text-dark">
+          ${priceLabel}
+        </span>
       </div>
+
       <p>${item.description}</p>
-      <p class="mb-3"><strong>Categoria:</strong> ${item.tags.join(", ")}</p>
+
+      <p class="mb-3">
+        <strong>Parole chiave:</strong>
+        ${(item.tags || []).join(", ") || "Nessuna"}
+      </p>
+
+      <div class="item-metadata mb-4">
+        <h6 class="mb-3">Dati dell'opera</h6>
+
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Opera associata</dt>
+          <dd class="col-sm-8">
+            ${item.objectName || "Non indicata"}
+          </dd>
+
+          <dt class="col-sm-4">Identificatore</dt>
+          <dd class="col-sm-8">
+            ${renderObjectIdentifier(item.objectId)}
+          </dd>
+
+          <dt class="col-sm-4">Datazione</dt>
+          <dd class="col-sm-8">
+            ${item.creationDate || "Non indicata"}
+          </dd>
+
+          <dt class="col-sm-4">Stile</dt>
+          <dd class="col-sm-8">
+            ${item.style || "Non indicato"}
+          </dd>
+
+          <dt class="col-sm-4">Tecnica</dt>
+          <dd class="col-sm-8">
+            ${item.technique || "Non indicata"}
+          </dd>
+
+          <dt class="col-sm-4">Materiali</dt>
+          <dd class="col-sm-8">
+            ${item.materials || "Non indicati"}
+          </dd>
+
+          <dt class="col-sm-4">Provenienza</dt>
+          <dd class="col-sm-8">
+            ${item.provenance || "Non indicata"}
+          </dd>
+        </dl>
+      </div>
+
       <div>${narrativeList}</div>
-      <p class="small text-secondary mt-3">Licenza: ${item.license}</p>
-      <p class="small text-secondary">Caricato da: ${item.createdBy || "sconosciuto"}</p>
+
+      <p class="small text-secondary mt-3">
+        Licenza: ${item.license}
+      </p>
+
+      <p class="small text-secondary">
+        Caricato da: ${item.createdBy || "sconosciuto"}
+      </p>
+
       ${buyButton}
       ${deleteButton}
       ${purchaseNote}
-    </div>`;
+    </div>
+  `;
 
   if (canBuy) {
     document
       .getElementById("buyItemButton")
-      ?.addEventListener("click", () => purchaseItem(item.id));
+      ?.addEventListener("click", () => {
+        purchaseItem(item.id);
+      });
   }
 
   if (canDelete) {
     document
       .getElementById("deleteItemButton")
-      ?.addEventListener("click", () => deleteItem(item.id));
+      ?.addEventListener("click", () => {
+        deleteItem(item.id);
+      });
   }
 
   switchTab("visits");
@@ -227,10 +408,25 @@ function renderVisits() {
   const visits = state.visits.filter(
     (visit) => visit.museumId === state.currentMuseum,
   );
+
   const visitsSection = document.getElementById("visits");
 
   if (visits.length === 0) {
-    visitsSection.classList.add("d-none");
+    elements.visitList.innerHTML = `
+      <div class="alert alert-info mb-0">
+        Nessuna visita disponibile per questo museo.
+      </div>
+    `;
+
+    elements.visitDetail.innerHTML = `
+      <div class="card-body">
+        <h4>Nessuna visita disponibile</h4>
+        <p class="text-muted">
+          Non sono ancora presenti visite per questo museo.
+        </p>
+      </div>
+    `;
+
     return;
   }
 
@@ -238,72 +434,192 @@ function renderVisits() {
 
   elements.visitList.innerHTML = visits
     .map((visit) => {
-      const priceLabel = visit.price === 0 ? "Gratis" : `EUR ${visit.price}`;
-      return `<button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-visit="${visit.id}"><span>${visit.name}</span><span class="badge bg-primary rounded-pill">${priceLabel}</span></button>`;
+      const priceLabel =
+        visit.price === 0
+          ? "Gratis"
+          : `EUR ${visit.price}`;
+
+      return `
+        <button
+          type="button"
+          class="list-group-item list-group-item-action
+                 d-flex justify-content-between align-items-center"
+          data-visit="${visit.id}"
+        >
+          <span>${visit.name}</span>
+
+          <span class="badge bg-primary rounded-pill">
+            ${priceLabel}
+          </span>
+        </button>
+      `;
     })
     .join("");
 
-  Array.from(elements.visitList.querySelectorAll("button[data-visit]")).forEach(
-    (button) => {
-      button.addEventListener("click", () =>
-        showVisitDetail(button.dataset.visit),
-      );
-    },
-  );
+  Array.from(
+    elements.visitList.querySelectorAll(
+      "button[data-visit]",
+    ),
+  ).forEach((button) => {
+    button.addEventListener("click", () => {
+      showVisitDetail(button.dataset.visit);
+    });
+  });
 }
 
 function showVisitDetail(visitId) {
-  const visit = state.visits.find((entry) => entry.id === visitId);
+  const visit = state.visits.find(
+    (entry) => entry.id === visitId,
+  );
+
   if (!visit) return;
 
-  const sequenceHtml = visit.sequence
+  const sequenceHtml = (visit.sequence || [])
     .map((step, index) => {
-      const item = state.items.find((i) => i.id === step.itemId);
-      return `<li class="mb-3"><strong>${index + 1}. ${item?.title || "Oggetto mancante"}</strong><br>${step.note || ""}</li>`;
+      const item = state.items.find(
+        (entry) => entry.id === step.itemId,
+      );
+
+      return `
+        <li class="mb-3">
+          <strong>
+            ${index + 1}.
+            ${item?.title || "Oggetto mancante"}
+          </strong>
+
+          <br>
+
+          ${step.note || ""}
+        </li>
+      `;
     })
     .join("");
 
-  const logisticsHtml = visit.logistics
+  const logisticsHtml = (visit.logistics || [])
     .map((note) => `<li>${note}</li>`)
     .join("");
-  const priceLabel = visit.price === 0 ? "Gratis" : `EUR ${visit.price}`;
-  const alreadyBought = !!state.currentUser?.purchases?.some(
-    (purchase) => purchase.visitId === visit.id,
-  );
+
+  const priceLabel =
+    visit.price === 0
+      ? "Gratis"
+      : `EUR ${visit.price}`;
+
+  const alreadyBought =
+    !!state.currentUser?.purchases?.some(
+      (purchase) => purchase.visitId === visit.id,
+    );
+
   const canBuy =
-    state.currentUser &&
-    state.currentUser.role === "visitor" &&
+    state.currentUser?.role === "visitor" &&
     !alreadyBought &&
     state.currentUser.credit >= visit.price;
+
+  const canEdit =
+    state.currentUser?.role === "author" &&
+    visit.createdBy === state.currentUser.username;
+
+  const canDelete =
+  state.currentUser?.role === "admin" ||
+  (
+    state.currentUser?.role === "author" &&
+    visit.createdBy === state.currentUser.username
+  );
+
   const buyButton =
     state.currentUser?.role === "visitor"
-      ? `<button id="buyVisitButton" class="btn btn-primary w-100" ${!canBuy ? "disabled" : ""}>${alreadyBought ? "Già acquistata" : `Compra visita (${priceLabel})`}</button>`
+      ? `
+        <button
+          id="buyVisitButton"
+          class="btn btn-primary w-100"
+          ${!canBuy ? "disabled" : ""}
+        >
+          ${
+            alreadyBought
+              ? "Già acquistata"
+              : `Compra visita (${priceLabel})`
+          }
+        </button>
+      `
       : "";
+
+  const editButton = canEdit
+    ? `
+      <button
+        id="editVisitButton"
+        class="btn btn-primary w-100 mt-2"
+      >
+        Modifica visita
+      </button>
+    `
+    : "";
+
+  const deleteButton = canDelete
+    ? `
+      <button
+        id="deleteVisitButton"
+        class="btn btn-outline-danger w-100 mt-2"
+      >
+        Elimina visita
+      </button>
+    `
+    : "";
 
   elements.visitDetail.innerHTML = `
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div
+        class="d-flex justify-content-between align-items-center mb-3"
+      >
         <div>
           <h4 class="mb-1">${visit.name}</h4>
-          <p class="text-muted mb-0">${visit.description}</p>
+
+          <p class="text-muted mb-0">
+            ${visit.description}
+          </p>
         </div>
-        <span class="badge bg-info text-dark">${priceLabel}</span>
+
+        <span class="badge bg-info text-dark">
+          ${priceLabel}
+        </span>
       </div>
+
       <div class="mb-3">
         <h6>Informazioni logistiche</h6>
         <ul>${logisticsHtml}</ul>
       </div>
+
       <div>
         <h6>Sequenza di visite</h6>
         <ol>${sequenceHtml}</ol>
       </div>
+
       ${buyButton}
-    </div>`;
+      ${deleteButton}
+      ${editButton}
+    </div>
+  `;
 
   if (canBuy) {
     document
       .getElementById("buyVisitButton")
-      ?.addEventListener("click", () => purchaseVisit(visit.id));
+      ?.addEventListener("click", () => {
+        purchaseVisit(visit.id);
+      });
+  }
+
+  if (canEdit) {
+    document
+      .getElementById("editVisitButton")
+      ?.addEventListener("click", () => {
+        startVisitEdit(visit.id);
+      });
+  }
+
+  if (canDelete) {
+    document
+      .getElementById("deleteVisitButton")
+      ?.addEventListener("click", () => {
+        deleteVisitEntry(visit.id);
+      });
   }
 }
 
@@ -354,6 +670,43 @@ function renderVisitSequence() {
   });
 }
 
+function startItemEdit(itemId) {
+  const item = state.items.find((entry) => entry.id === itemId);
+
+  if (!item) return;
+
+  const authorized =
+    state.currentUser?.role === "author" &&
+    item.createdBy === state.currentUser.username;
+
+  if (!authorized) return;
+
+  state.editingItemId = item.id;
+
+  elements.newTitle.value = item.title || "";
+  elements.newAuthor.value = item.author || "";
+  elements.newObjectId.value = item.objectId || "";
+  elements.newCreationDate.value = item.creationDate || "";
+  elements.newStyle.value = item.style || "";
+  elements.newTechnique.value = item.technique || "";
+  elements.newMaterials.value = item.materials || "";
+  elements.newProvenance.value = item.provenance || "";
+  elements.newTags.value = (item.tags || []).join(", ");
+  elements.newDuration.value = item.duration || "15s";
+  elements.newLanguage.value = item.language || "medio";
+  elements.newPrice.value = item.price || 0;
+  elements.newLicense.value = item.license || "CC BY-NC";
+  elements.newImage.value = item.image || "";
+  elements.newText.value = item.narratives?.[0]?.text || "";
+  elements.newObject.value = item.objectName || "";
+
+  elements.contentEditorTitle.textContent = "Modifica item";
+  elements.createContent.textContent = "Salva modifiche";
+  elements.cancelContentEdit.classList.remove("d-none");
+
+  switchTab("editor");
+}
+
 async function createContent() {
   if (state.currentUser?.role !== "author") {
     elements.editorMessage.textContent =
@@ -372,9 +725,22 @@ async function createContent() {
     image:
       elements.newImage.value.trim() ||
       "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
-    description: `Contenuto creato per ${elements.newObject.value.trim() || "un oggetto museale"}`,
-    room: "Sala editor",
-    tags: [elements.newObject.value.trim() || "Contenuto generico"],
+    
+    
+      objectName: elements.newObject.value.trim() || "Oggetto museale non specificato",
+      objectId: elements.newObjectId.value.trim(),
+      creationDate: elements.newCreationDate.value.trim(),
+      style: elements.newStyle.value.trim(),
+      technique: elements.newTechnique.value.trim(),
+      materials: elements.newMaterials.value.trim(),
+      provenance: elements.newProvenance.value.trim(),
+      description: `Contenuto creato per ${elements.newObject.value.trim() || "un oggetto museale"}`,
+      room: "Sala editor",
+      tags: elements.newTags.value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+
     actorUsername: state.currentUser.username,
     narratives: [
       {
@@ -387,11 +753,18 @@ async function createContent() {
     ],
   };
 
-  const response = await fetch("/api/items", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(item),
-  });
+  const isEditing = Boolean(state.editingItemId);
+
+  const response = await fetch(
+    isEditing
+      ? `/api/items/${state.editingItemId}`
+      : "/api/items",
+    {
+      method: isEditing ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(item),
+    },
+  );
 
   if (!response.ok) {
     const error = await response
@@ -401,14 +774,63 @@ async function createContent() {
       error.error || "Errore durante il salvataggio del contenuto.";
     return;
   }
-  const created = await response.json();
-  state.items.push(created);
+  const savedItem = await response.json();
+
+  if (isEditing) {
+    state.items = state.items.map((entry) =>
+      entry.id === savedItem.id ? savedItem : entry,
+    );
+  } else {
+    state.items.push(savedItem);
+  }
+
   renderItems();
   renderVisitItemOptions();
+
+  if (isEditing) {
+    state.editingItemId = null;
+    elements.contentEditorTitle.textContent = "Crea nuovo contenuto";
+    elements.createContent.textContent = "Salva contenuto";
+    elements.cancelContentEdit.classList.add("d-none");
+  }
+
   elements.editorMessage.textContent = "Contenuto salvato con successo.";
   setTimeout(() => {
     elements.editorMessage.textContent = "";
   }, 3000);
+}
+
+function startVisitEdit(visitId) {
+  const visit = state.visits.find(
+    (entry) => entry.id === visitId,
+  );
+
+  if (!visit) return;
+
+  const authorized =
+    state.currentUser?.role === "author" &&
+    visit.createdBy === state.currentUser.username;
+
+  if (!authorized) return;
+
+  state.editingVisitId = visit.id;
+
+  elements.newVisitName.value = visit.name || "";
+  elements.newVisitDescription.value = visit.description || "";
+  elements.newVisitLogistics.value =
+    (visit.logistics || []).join("\n");
+
+  state.newVisitSequence = (visit.sequence || []).map((step) => ({
+    ...step,
+  }));
+
+  renderVisitSequence();
+
+  elements.visitEditorTitle.textContent = "Modifica visita";
+  elements.createVisit.textContent = "Salva modifiche";
+  elements.cancelVisitEdit.classList.remove("d-none");
+
+  switchTab("editor");
 }
 
 async function createVisit() {
@@ -439,11 +861,25 @@ async function createVisit() {
     createdBy: state.currentUser.username,
   };
 
-  const response = await fetch("/api/visits", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(visit),
-  });
+  const isEditing = Boolean(state.editingVisitId);
+
+  const requestBody = isEditing
+    ? {
+        ...visit,
+        actorUsername: state.currentUser.username,
+      }
+    : visit;
+
+  const response = await fetch(
+    isEditing
+      ? `/api/visits/${state.editingVisitId}`
+      : "/api/visits",
+    {
+      method: isEditing ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    },
+  );
 
   if (!response.ok) {
     elements.visitMessage.textContent =
@@ -451,10 +887,24 @@ async function createVisit() {
     return;
   }
 
-  const created = await response.json();
-  state.visits.push(created);
+  const savedVisit = await response.json();
+
+  if (isEditing) {
+    state.visits = state.visits.map((entry) =>
+      entry.id === savedVisit.id ? savedVisit : entry,
+    );
+  } else {
+    state.visits.push(savedVisit);
+  }
   renderVisits();
-  elements.visitMessage.textContent = "Visita creata con successo.";
+  elements.visitMessage.textContent = isEditing
+  ? "Visita modificata con successo."
+  : "Visita creata con successo.";
+  state.editingVisitId = null;
+  elements.visitEditorTitle.textContent = "Crea nuova visita";
+  elements.createVisit.textContent = "Crea visita";
+  elements.cancelVisitEdit.classList.add("d-none");
+
   elements.newVisitName.value = "";
   elements.newVisitDescription.value = "";
   elements.newVisitLogistics.value = "";
@@ -548,6 +998,72 @@ async function purchaseItem(itemId) {
   }, 3000);
 }
 
+async function deleteVisitEntry(visitId) {
+  if (!state.currentUser) {
+    updateLoginStatus(
+      "Devi effettuare il login per eliminare una visita.",
+      false,
+    );
+
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Vuoi davvero eliminare questa visita? L'operazione non può essere annullata.",
+  );
+
+  if (!confirmed) return;
+
+  const response = await fetch(
+    `/api/visits/${visitId}/delete`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: state.currentUser.username,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({
+        error: "Eliminazione della visita fallita.",
+      }));
+
+    elements.visitDetail.innerHTML = `
+      <div class="card-body">
+        <div class="alert alert-danger mb-0">
+          ${error.error || "Eliminazione della visita fallita."}
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  state.visits = state.visits.filter(
+    (visit) => visit.id !== visitId,
+  );
+
+  if (state.editingVisitId === visitId) {
+    cancelVisitEdit();
+  }
+
+  renderVisits();
+
+  elements.visitDetail.innerHTML = `
+    <div class="card-body">
+      <div class="alert alert-success mb-0">
+        Visita eliminata con successo.
+      </div>
+    </div>
+  `;
+}
+
 async function deleteItem(itemId) {
     console.log("Tentativo di eliminazione del contenuto con ID:", itemId);
   if (!state.currentUser) {
@@ -588,7 +1104,34 @@ async function deleteItem(itemId) {
   elements.visitMessage.className = "mt-3 text-success";
 }
 
+function cancelItemEdit() {
+  state.editingItemId = null;
+
+  elements.contentEditorTitle.textContent = "Crea nuovo contenuto";
+  elements.createContent.textContent = "Salva contenuto";
+  
+  elements.cancelContentEdit.classList.add("d-none");
+  elements.editorMessage.textContent = "";
+}
+
+function cancelVisitEdit() {
+  state.editingVisitId = null;
+
+  elements.visitEditorTitle.textContent = "Crea nuova visita";
+  elements.createVisit.textContent = "Crea visita";
+  elements.cancelVisitEdit.classList.add("d-none");
+  elements.visitMessage.textContent = "";
+
+  elements.newVisitName.value = "";
+  elements.newVisitDescription.value = "";
+  elements.newVisitLogistics.value = "";
+
+  state.newVisitSequence = [];
+  renderVisitSequence();
+}
+
 function setupEvents() {
+  elements.cancelContentEdit.addEventListener("click", cancelItemEdit);
   elements.museumSelect.addEventListener("change", (event) => {
     state.currentMuseum = event.target.value;
     renderItems();
@@ -616,6 +1159,11 @@ function setupEvents() {
   elements.createContent.addEventListener("click", createContent);
   elements.addVisitItem.addEventListener("click", addSequenceItem);
   elements.createVisit.addEventListener("click", createVisit);
+
+  elements.cancelVisitEdit.addEventListener(
+  "click",
+  cancelVisitEdit,
+);
 }
 
 export async function initApp() {

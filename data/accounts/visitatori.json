@@ -3,7 +3,7 @@
     "username": "visitatore1",
     "role": "visitor",
     "password": "12345678",
-    "credit": 9,
+    "credit": 7.99,
     "purchases": [
       {
         "visitId": "visit-002",
@@ -29,6 +29,31 @@
         "visitId": "visit-003",
         "price": 15,
         "boughtAt": "2026-08-06T20:11:36.676Z"
+      },
+      {
+        "itemId": "item-034",
+        "price": 0,
+        "boughtAt": "2026-08-15T07:20:19.083Z"
+      },
+      {
+        "itemId": "item-035",
+        "price": 0,
+        "boughtAt": "2026-08-15T07:22:19.667Z"
+      },
+      {
+        "itemId": "item-036",
+        "price": 0.01,
+        "boughtAt": "2026-08-15T07:30:28.125Z"
+      },
+      {
+        "itemId": "item-037",
+        "price": 1,
+        "boughtAt": "2026-08-15T07:30:34.526Z"
+      },
+      {
+        "itemId": "item-030",
+        "price": 0,
+        "boughtAt": "2026-08-15T07:46:56.258Z"
       }
     ]
   },
