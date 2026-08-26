@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestione Item</title>
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <a href="Index.html">Home</a>
+    <a href="Items.html">Item</a>
+    <a href="Visits.html">Visite</a>
+    <a href="ChooseVisit.html">Avvia</a>
+</nav>
+
+<h1>Gestione Item</h1>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="card">
+        <h2>Crea / Modifica Item</h2>
+
+        <form id="itemForm">
+
+            <input type="text" id="museumId" placeholder="Museum ID" required>
+            <input type="text" id="objectId" placeholder="Object ID" required>
+            <input type="text" id="title" placeholder="Titolo" required>
+
+            <textarea id="text" placeholder="Testo" required></textarea>
+
+            <select id="duration">
+                <option value="3">3s</option>
+                <option value="15">15s</option>
+                <option value="40">40s</option>
+            </select>
+
+            <select id="languageLevel">
+                <option value="infantile">infantile</option>
+                <option value="semplice">semplice</option>
+                <option value="medio">medio</option>
+                <option value="avanzato">avanzato</option>
+            </select>
+
+            <input type="text" id="author" placeholder="Autore" required>
+            <input type="text" id="license" placeholder="Licenza" required>
+            <input type="number" id="price" placeholder="Prezzo (€)" min="0">
+            <input type="text" id="room" placeholder="Sala">
+
+            <!-- per la compatibilità a wikidata -->
+            <input type="text" id="externalId" placeholder="Wikidata ID (es: Q12345)">
+
+            <button type="submit">Salva Item</button>
+        </form>
+    </div>
+
+    <!-- LISTA -->
+    <div class="card">
+        <h2>Lista Item</h2>
+
+        <input type="text" id="searchInput" placeholder="Cerca per titolo o autore...">
+        <div class="filters">
+
+            <select id="filterPrice">
+                <option value="all">Tutti</option>
+                <option value="free">Gratis</option>
+                <option value="paid">A pagamento</option>
+            </select>
+
+            <select id="filterLevel">
+                <option value="all">Tutti i livelli</option>
+                <option value="infantile">infantile</option>
+                <option value="semplice">semplice</option>
+                <option value="medio">medio</option>
+                <option value="avanzato">avanzato</option>
+            </select>
+
+            <select id="filterDuration">
+                <option value="all">Tutte le durate</option>
+                <option value="3">3s</option>
+                <option value="15">15s</option>
+                <option value="40">40s</option>
+            </select>
+
+            <select id="filterRoom">
+                <option value="all">Tutte le sale</option>
+            </select>
+
+        </div>
+
+        <div id="itemsList"></div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/Items.js"></script>
+
+</body>
+
+
+
+</html>

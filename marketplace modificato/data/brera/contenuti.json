@@ -1,0 +1,513 @@
+[
+  {
+    "id": "item-006",
+    "museumId": "brera",
+    "title": "Autoritratto con cuffia rossa",
+    "author": "Piero della Francesca",
+    "description": "Ritratto compatto dal disegno preciso e dai colori netti.",
+    "room": "Sala 12",
+    "language": "medio",
+    "duration": "40s",
+    "price": 0,
+    "license": "Pubblico dominio",
+    "image": "https://via.placeholder.com/320x220?text=Autoritratto+Piero+della+Francesca",
+    "tags": [
+      "Rinascimento",
+      "Piero",
+      "Ritratto"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "15s",
+        "text": "Questo è un autoritratto: l’artista si è dipinto con una cuffia rossa e uno sguardo serio.",
+        "tone": "accessibile"
+      },
+      {
+        "level": "specialistico",
+        "duration": "40s",
+        "text": "La struttura geometrica del volto e l’uso di una luce uniforme ricordano i principi matematici del Rinascimento.",
+        "tone": "didattico"
+      },
+      {
+        "level": "infantile",
+        "duration": "3s",
+        "text": "Un uomo con un cappello rosso si guarda davanti a sé.",
+        "tone": "semplice"
+      }
+    ],
+    "createdBy": "admin1"
+  },
+  {
+    "id": "item-009",
+    "museumId": "brera",
+    "title": "Adorazione dei Magi",
+    "author": "Gentile da Fabriano",
+    "description": "Una scena sontuosa con molti personaggi e dettagli dorati.",
+    "room": "Sala 3",
+    "language": "medio",
+    "duration": "40s",
+    "price": 0,
+    "license": "Creative Commons",
+    "image": "https://via.placeholder.com/320x220?text=Adorazione+dei+Magi",
+    "tags": [
+      "Gothic",
+      "Fabriano",
+      "Religioso"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "15s",
+        "text": "Molte persone portano regali a un bambino e lo ammirano.",
+        "tone": "accessibile"
+      },
+      {
+        "level": "specialistico",
+        "duration": "40s",
+        "text": "La scena è un capolavoro del gotico internazionale, con dettagli raffinati e un’iconografia ricca di simboli.",
+        "tone": "didattico"
+      },
+      {
+        "level": "infantile",
+        "duration": "3s",
+        "text": "Persone vestite di lusso portano regali a un bimbo speciale.",
+        "tone": "semplice"
+      }
+    ],
+    "createdBy": "admin1"
+  },
+  {
+    "id": "item-010",
+    "museumId": "brera",
+    "title": "Il bacio",
+    "author": "Francesco Hayez",
+    "description": "Un abbraccio romantico nell’Italia risorgimentale.",
+    "room": "Sala 9",
+    "language": "medio",
+    "duration": "40s",
+    "price": 2,
+    "license": "CC BY-NC",
+    "image": "https://via.placeholder.com/320x220?text=Il+Bacio",
+    "tags": [
+      "Romanticismo",
+      "Hayez",
+      "Amore"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "15s",
+        "text": "Due persone si baciano in un abbraccio appassionato.",
+        "tone": "accessibile"
+      },
+      {
+        "level": "specialistico",
+        "duration": "40s",
+        "text": "Hayez dipinge l’intimità e la drammaticità del sentimento romantico, usando colori caldi e una luce avvolgente.",
+        "tone": "didattico"
+      },
+      {
+        "level": "infantile",
+        "duration": "3s",
+        "text": "Due persone si abbracciano e si baciano dolcemente.",
+        "tone": "semplice"
+      }
+    ],
+    "createdBy": "admin1"
+  },
+  {
+    "id": "item-011",
+    "museumId": "brera",
+    "title": "Madonna del Padiglione",
+    "author": "Piero della Francesca",
+    "description": "Un’immagine sacra calma e geometrica con la Vergine e il Bambino.",
+    "room": "Sala 6",
+    "language": "medio",
+    "duration": "40s",
+    "price": 0,
+    "license": "Pubblico dominio",
+    "image": "https://via.placeholder.com/320x220?text=Madonna+del+Padiglione",
+    "tags": [
+      "Rinascimento",
+      "Piero",
+      "Mariano"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "15s",
+        "text": "La Madonna tiene il Bambino in braccio in modo delicato e sereno.",
+        "tone": "accessibile"
+      },
+      {
+        "level": "specialistico",
+        "duration": "40s",
+        "text": "La composizione è costruita su un equilibrio matematico, con un uso sapiente dello spazio e dei volumi.",
+        "tone": "didattico"
+      },
+      {
+        "level": "infantile",
+        "duration": "3s",
+        "text": "Una madre tiene il suo bambino molto vicino a sé.",
+        "tone": "semplice"
+      }
+    ],
+    "createdBy": "admin1"
+  },
+  {
+    "id": "item-012",
+    "museumId": "brera",
+    "title": "Madonna del Padiglione - approfondimento",
+    "author": "Piero della Francesca",
+    "description": "Testo specialistico per esplorare proporzioni e simboli dell’opera.",
+    "room": "Sala 6",
+    "language": "specialistico",
+    "duration": "4min",
+    "price": 0,
+    "license": "Pubblico dominio",
+    "image": "https://via.placeholder.com/320x220?text=Madonna+del+Padiglione+approfondimento",
+    "tags": [
+      "Rinascimento",
+      "Geometria",
+      "Piero"
+    ],
+    "narratives": [
+      {
+        "level": "specialistico",
+        "duration": "4min",
+        "text": "L’opera utilizza proporzioni rigorose e una prospettiva misurata. La struttura architettonica della scena richiama motivi classici e rinascimentali.",
+        "tone": "accademico"
+      }
+    ],
+    "createdBy": "admin1"
+  },
+  {
+    "museumId": "brera",
+    "title": "Questo E' un semplice Test",
+    "author": "GiornoNotte",
+    "duration": "3s",
+    "language": "medio",
+    "price": 0,
+    "license": "NON ne ho idea",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/21/Marcantoniomemmogemvlbassano_hi.jpg",
+    "description": "Contenuto creato per Qualcosa qualcosa qualcosa",
+    "room": "Sala editor",
+    "tags": [
+      "Qualcosa qualcosa qualcosa"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "3s",
+        "text": "Questo E' un doge"
+      }
+    ],
+    "id": "item-013",
+    "createdBy": "admin1"
+  },
+  {
+    "museumId": "brera",
+    "title": "FUUUUUU",
+    "author": "3s",
+    "duration": "15s",
+    "language": "elementare",
+    "price": 20,
+    "license": "Roba mia",
+    "image": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fwww.lalucedimaria.it%2Fwp-content%2Fuploads%2F2025%2F02%2FGesu-purificazione.jpg&sp=1785955554T1316710bd36907ccf599b76698f2bad2f490f64bc63bdaaba7134a71121dd2b2",
+    "description": "Contenuto creato per Gomma da cancellare",
+    "room": "Sala editor",
+    "tags": [
+      "Gomma da cancellare"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "15s",
+        "text": "Roba sua"
+      }
+    ],
+    "id": "item-014",
+    "createdBy": "admin1"
+  },
+  {
+    "museumId": "brera",
+    "title": "Paperino",
+    "author": "Disney",
+    "duration": "3s",
+    "language": "elementare",
+    "price": 1,
+    "license": "CC BY-NC",
+    "image": "https://www.cartoni-animati.com/wp-content/uploads/paperino-770x382.jpg",
+    "description": "Contenuto creato per FUUUUUU",
+    "room": "Sala editor",
+    "tags": [
+      "FUUUUUU"
+    ],
+    "narratives": [
+      {
+        "level": "elementare",
+        "duration": "3s",
+        "text": "Paperino pio della piava"
+      }
+    ],
+    "id": "item-018",
+    "createdBy": "admin1"
+  },
+  {
+    "actorUsername": "autore1",
+    "museumId": "brera",
+    "title": "Delete Admin Test 2",
+    "author": "Autore Test",
+    "description": "Item delete",
+    "room": "Sala test",
+    "language": "medio",
+    "duration": "15s",
+    "price": 1,
+    "license": "CC BY-NC",
+    "image": "https://shorturl.at/AsyeD",
+    "tags": [
+      "test"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "15s",
+        "text": "test"
+      }
+    ],
+    "id": "item-022"
+  },
+  {
+    "actorUsername": "autore1",
+    "museumId": "brera",
+    "title": "Manual Test Item v2",
+    "author": "Autore Test",
+    "description": "Item test",
+    "room": "Sala test",
+    "language": "medio",
+    "duration": "15s",
+    "price": 9,
+    "license": "CC BY-NC",
+    "image": "https://shorturl.at/AsyeD",
+    "tags": [
+      "test"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "15s",
+        "text": "test"
+      }
+    ],
+    "id": "item-026"
+  },
+  {
+    "museumId": "brera",
+    "title": "Nine tail fox",
+    "author": "Quale pazzo",
+    "duration": "120s",
+    "language": "infantile",
+    "price": 10,
+    "license": "E' tutto mio",
+    "image": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fwallpapers.com%2Fimages%2Ffeatured%2Fnine-tailed-fox-175d80vwddrk1nv9.jpg&sp=1786126290Tb4d163b3d835ee63247a8795f10b50d87c5f88ff8ab79c575fe5766a7d319065",
+    "description": "Contenuto creato per Nine Tail fox",
+    "room": "Sala editor",
+    "tags": [
+      "Nine Tail fox"
+    ],
+    "narratives": [
+      {
+        "level": "infantile",
+        "duration": "120s",
+        "text": "The nine-tailed fox (九尾狐) is a mythical fox entity originating from the mythology of China.\n\nThe first recorded appearance of the nine-tailed fox can be found in the ancient Chinese text, Shanhaijing (Classic of Mountains and Seas), which was compiled sometime between the Warring States period and the early Han dynasty (circa 475 BCE – 141 BCE). The text states: \"In the land of Qingqiu, there lives a fox with nine tails.\" \n\nn Chinese classical texts and the poetic tradition of the Tang Dynasty, “Qingqiu” was originally a mythologized geographical image, often used to refer to distant lands in the east. Tang poets some time used “Qingqiu” as a general reference to eastern states such as Goguryeo and Baekje, or to surrounding regions.Although Qingqiu is more likely a mythological concept created by blending elements of real geography with imagination, the place that likely inspired it is believed to be in the Heze area of Shandong Province."
+      }
+    ],
+    "id": "item-028",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "x",
+    "author": "x",
+    "duration": "15s",
+    "language": "infantile",
+    "price": 0,
+    "license": "CC BY-NC",
+    "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+    "objectName": "Oggetto museale non specificato",
+    "objectId": "q123456",
+    "creationDate": "",
+    "style": "",
+    "technique": "cs",
+    "materials": "cs",
+    "provenance": "cs",
+    "description": "Contenuto creato per Oggetto museale non specificato",
+    "room": "Sala editor",
+    "tags": [
+      "cs"
+    ],
+    "narratives": [
+      {
+        "level": "infantile",
+        "duration": "15s",
+        "text": "modifica descrizione"
+      }
+    ],
+    "id": "item-029",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "x modifica",
+    "author": "x",
+    "duration": "15s",
+    "language": "infantile",
+    "price": 0,
+    "license": "CC BY-NC",
+    "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+    "objectName": "Oggetto museale non specificato",
+    "objectId": "x",
+    "creationDate": "x",
+    "style": "",
+    "technique": "",
+    "materials": "",
+    "provenance": "",
+    "description": "Contenuto creato per Oggetto museale non specificato",
+    "room": "Sala editor",
+    "tags": [],
+    "narratives": [
+      {
+        "level": "infantile",
+        "duration": "15s",
+        "text": "Testo di esempio creato nell'editor."
+      }
+    ],
+    "id": "item-032",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "ciao 2",
+    "author": "ciao",
+    "duration": "40 s",
+    "language": "medio",
+    "price": 0,
+    "license": "CC BY-NC",
+    "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+    "objectName": "è un ciao e questa è una modifica",
+    "objectId": "q234356",
+    "creationDate": "1504",
+    "style": "rinascimentale",
+    "technique": "olio",
+    "materials": "tela",
+    "provenance": "bologna",
+    "description": "Contenuto creato per è un ciao e questa è una modifica",
+    "room": "Sala editor",
+    "tags": [
+      "cs"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "40 s",
+        "text": "ciaoo ciaoo ciaoo"
+      }
+    ],
+    "id": "item-033",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "ciao 3",
+    "author": "ciao",
+    "duration": "40 s",
+    "language": "medio",
+    "price": 0.01,
+    "license": "CC BY-NC",
+    "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+    "objectName": "è un ciao e questa è una modifica",
+    "objectId": "q234356",
+    "creationDate": "1504",
+    "style": "rinascimentale",
+    "technique": "olio",
+    "materials": "tela",
+    "provenance": "bologna",
+    "description": "Contenuto creato per è un ciao e questa è una modifica",
+    "room": "Sala editor",
+    "tags": [
+      "cs"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "40 s",
+        "text": "modifica di ciao 2"
+      }
+    ],
+    "id": "item-035",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "ciao 4",
+    "author": "ciao",
+    "duration": "40 s",
+    "language": "medio",
+    "price": 0.01,
+    "license": "CC BY-NC",
+    "image": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Frandom-question-but-does-anyone-have-versions-of-this-cat-v0-ya8qikz9kn0f1.png%3Fauto%3Dwebp%26s%3Dc2fdba9a3904ab3bec9e7367e380f66343c2929a",
+    "objectName": "è un ciao e questa è una modifica",
+    "objectId": "q234356",
+    "creationDate": "1504",
+    "style": "rinascimentale",
+    "technique": "olio",
+    "materials": "tela",
+    "provenance": "bologna",
+    "description": "Contenuto creato per è un ciao e questa è una modifica",
+    "room": "Sala editor",
+    "tags": [
+      "cs"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "40 s",
+        "text": "siuuuummmmm"
+      }
+    ],
+    "id": "item-036",
+    "createdBy": "autore1"
+  },
+  {
+    "museumId": "brera",
+    "title": "urlo del sium",
+    "author": "ciao",
+    "duration": "40 s",
+    "language": "medio",
+    "price": 0.01,
+    "license": "CC BY-NC",
+    "image": "https://www.google.com/search?q=ronaldo+sium&sca_esv=c4b1addd543662be&rlz=1C5OZZY_enIT1214IT1214&udm=2&biw=1470&bih=751&sxsrf=APpeQnuyAGM77I_SgC65eR6qwpxbdgustw%3A1786779883189&ei=6xiAatGVC466i-gP2oCeuAw&ved=0ahUKEwiRt-rhkaKWAxUO3QIHHVqAB8cQ4dUDCBE&uact=5&oq=ronaldo+sium&gs_lp=Egtnd3Mtd2l6LWltZyIMcm9uYWxkbyBzaXVtMgUQABiABDIFEAAYgAQyBxAAGIAEGAoyBxAAGIAEGAoyBBAAGB4yBBAAGB4yBhAAGB4YCjIEEAAYHjIEEAAYHjIIEAAYBRgeGApIlwpQb1jeB3ABeACQAQCYAUKgAboCqgEBNbgBA8gBAPgBAZgCBqAC2wLCAgYQABgHGB7CAg0QABiABBiKBRhDGLEDwgIIEAAYgAQYsQPCAg4QABiABBiKBRixAxiDAcICChAAGIAEGIoFGEPCAgsQABiABBixAxiDAcICBBAAGAOYAwCIBgGSBwE2oAenGLIHATW4B9QCwgcDMi02yAcWgAgB&sclient=gws-wiz-img#sv=CAMSURoyKhBlLUdMUWtyMl8wT3ZCb0hNMg5HTFFrcjJfME92Qm9ITToObVRCVGpocDhFN0RDY00gBCoXCgFzEhBlLUdMUWtyMl8wT3ZCb0hNGAEwARgHILKjgZILSggQARgBIAEoAQ",
+    "objectName": "è un ciao e questa è una modifica",
+    "objectId": "q234356",
+    "creationDate": "1504",
+    "style": "rinascimentale",
+    "technique": "olio",
+    "materials": "tela",
+    "provenance": "bologna",
+    "description": "Contenuto creato per è un ciao e questa è una modifica",
+    "room": "Sala editor",
+    "tags": [
+      "cs"
+    ],
+    "narratives": [
+      {
+        "level": "medio",
+        "duration": "40 s",
+        "text": "siuuuummmmm"
+      }
+    ],
+    "id": "item-037",
+    "createdBy": "autore1"
+  }
+]

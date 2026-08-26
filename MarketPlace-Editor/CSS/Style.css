@@ -1,0 +1,175 @@
+/* ===============================
+   RESET BASE
+=============================== */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF;
+}
+
+/* ===============================
+   NAVBAR
+=============================== */
+nav {
+    background-color: #003366;
+    padding: 12px 20px;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #87CEEB;
+}
+
+/* ===============================
+   CONTAINER
+=============================== */
+.container {
+    width: 85%;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+/* ===============================
+   TITOLI
+=============================== */
+h1, h2 {
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+/* ===============================
+   FORM INPUT
+=============================== */
+input, textarea, select {
+    display: block;
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ===============================
+   BOTTONI
+=============================== */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #3e8e41;
+}
+
+/* ===============================
+   CARD (CUORE UI)
+=============================== */
+.card {
+    background-color: #F5F5DC;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 🔥 hover migliorato (non cambia colore!) */
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin: 5px 0;
+}
+
+/* ===============================
+   CHECKBOX LIST
+=============================== */
+#itemsCheckboxList {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #F5F5DC;
+    border-radius: 8px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* più vicino */
+    margin-bottom: 5px;
+}
+
+/* ===============================
+   FILTRI
+=============================== */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+/* ===============================
+   VISIT PLAYER
+=============================== */
+#itemText {
+    margin: 20px 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+#nextButton {
+    margin-top: 15px;
+    width: 100%;
+    font-size: 16px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.success {
+    background-color: #4CAF50; /* verde */
+}
+
+.toast.edit {
+    background-color: #2196F3; /* blu */
+}
+
+.toast.delete {
+    background-color: #cc3333; /* rosso */
+}
+
+/* visibile */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}

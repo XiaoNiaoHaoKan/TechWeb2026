@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestione Visite</title>
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <a href="Index.html">Home</a>
+    <a href="Items.html">Item</a>
+    <a href="Visits.html">Visite</a>
+    <a href="ChooseVisit.html">Avvia</a>
+</nav>
+
+<h1>Gestione Visite</h1>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="card">
+        <h2>Crea / Modifica Visita</h2>
+
+        <form id="visitForm">
+
+            <input type="text" id="title" placeholder="Titolo visita" required>
+
+            <label class="checkbox-row">
+                <input type="checkbox" id="synchronized">
+                Visita sincronizzata?
+            </label>
+
+            <h3>Seleziona gli item</h3>
+            <div id="itemsCheckboxList"></div>
+
+            <button type="submit">Salva Visita</button>
+        </form>
+    </div>
+
+    <!-- LISTA VISITE -->
+    <div class="card">
+        <h2>Lista Visite</h2>
+
+        <div id="visitsList"></div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/Visits.js"></script>
+
+</body>
+
+
+
+</html>

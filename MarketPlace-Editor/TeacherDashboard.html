@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Teacher Dashboard</title>
+
+    <link rel="stylesheet" href="CSS/Style.css">
+
+</head>
+
+
+<body>
+
+
+<nav>
+
+    <a href="Index.html">
+        Home
+    </a>
+
+</nav>
+
+
+
+<h1>
+    Teacher Dashboard
+</h1>
+
+
+
+<div class="container">
+
+
+    <!-- CONTROLLO VISITA -->
+
+    <div class="card">
+
+
+        <h2 id="visitTitle"></h2>
+
+
+
+        <h3>
+            Opera corrente:
+            <span id="currentItem"></span>
+        </h3>
+
+
+
+        <p>
+            Numero opera:
+            <span id="currentIndex"></span>
+        </p>
+
+
+
+        <p>
+            Stato:
+            <span id="status"></span>
+        </p>
+
+
+
+        <button id="previousButton">
+            Opera precedente
+        </button>
+
+
+
+        <button id="nextButton">
+            Opera successiva
+        </button>
+
+
+
+        <button id="stopButton">
+            Termina visita
+        </button>
+
+
+    </div>
+
+
+
+
+    <!-- DOMANDE STUDENTI -->
+
+    <div class="card">
+
+
+        <h2>
+            Domande degli studenti
+        </h2>
+
+
+
+        <div id="questionsList">
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <!-- STUDENTI COLLEGATI -->
+
+    <div class="card">
+
+
+        <h2>
+            Studenti collegati
+        </h2>
+
+
+
+        <div id="studentsList">
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+<button id="quizEditorButton">
+    Gestisci Quiz
+</button>
+
+
+<button id="startQuizButton">
+    Avvia Quiz
+</button>
+
+<div class="card">
+
+<h2>
+Risultati quiz
+</h2>
+
+
+<div id="quizResults">
+
+</div>
+
+
+</div>
+
+<script src="JAVASCRIPT/API.js"></script>
+
+<script src="JAVASCRIPT/TeacherDashboard.js"></script>
+
+
+</body>
+
+</html>

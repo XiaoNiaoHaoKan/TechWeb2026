@@ -1,0 +1,16 @@
+[
+  {
+    "username": "autore1",
+    "role": "author",
+    "password": "12345678",
+    "credit": 51.01,
+    "purchases": []
+  },
+  {
+    "username": "autore2",
+    "role": "author",
+    "password": "12345678",
+    "credit": 50,
+    "purchases": []
+  }
+]
