@@ -7,6 +7,6 @@ RUN npm install --production
 
 COPY . .
 
-EXPOSE 3000
-ENV PORT=3000
-CMD ["node", "server.js"]
+EXPOSE 8000
+ENV PORT=8000
+CMD ["node", "server_marketplace/index.js"]

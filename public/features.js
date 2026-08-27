@@ -797,7 +797,7 @@ async function createContent() {
   elements.editorMessage.textContent = "Contenuto salvato con successo.";
   setTimeout(() => {
     elements.editorMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 function startVisitEdit(visitId) {
@@ -912,7 +912,7 @@ async function createVisit() {
   renderVisitSequence();
   setTimeout(() => {
     elements.visitMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 async function purchaseVisit(visitId) {
@@ -995,7 +995,7 @@ async function purchaseItem(itemId) {
 
   setTimeout(() => {
     elements.visitMessage.textContent = "";
-  }, 3000);
+  }, 8000);
 }
 
 async function deleteVisitEntry(visitId) {
@@ -1065,7 +1065,6 @@ async function deleteVisitEntry(visitId) {
 }
 
 async function deleteItem(itemId) {
-    console.log("Tentativo di eliminazione del contenuto con ID:", itemId);
   if (!state.currentUser) {
     updateLoginStatus(
       "Devi effettuare il login per eliminare un contenuto.",
@@ -1073,14 +1072,22 @@ async function deleteItem(itemId) {
     );
     return;
   }
-  
-  const response = await fetch(`/api/items/${itemId}/delete`, {
-    method: "POST",
+
+  let response = await fetch(`/api/items/${itemId}`, {
+    method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: state.currentUser.username }),
   });
 
-  console.log(response);
+  // Fallback per client/proxy che bloccano il metodo DELETE.
+  if (!response.ok && (response.status === 404 || response.status === 405)) {
+    response = await fetch(`/api/items/${itemId}/delete`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: state.currentUser.username }),
+    });
+  }
+
   if (!response.ok) {
     const error = await response
       .json()
