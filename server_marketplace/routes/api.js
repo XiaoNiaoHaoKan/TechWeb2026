@@ -14,7 +14,8 @@ function registerApiRoutes(app, repository, storage) {
     deleteVisit,
     deleteItem,
     findUser,
-    listUsers
+    listUsers,
+    commitPurchaseNotification
   } = repository;
   const { writePurchasedItemSnapshot } = storage;
 
@@ -116,6 +117,19 @@ function registerApiRoutes(app, repository, storage) {
 
     await deleteVisit(visit.id);
 
+    await commitPurchaseNotification({
+      type: 'visit',
+      visitId: String(visit.id),
+      buyerUsername: username,
+      sellerUsername: visit.createdBy || '',
+      price: cost,
+      itemTitle: visit.name || visit.title || '',
+      itemData: visit,
+      purchasedAt: new Date(),
+      isRead: false,
+      readAt: null
+    });
+
     const { password, ...safeUser } = savedUser;
     res.json(safeUser);
   });
@@ -182,6 +196,19 @@ function registerApiRoutes(app, repository, storage) {
     }
 
     await deleteItem(item.id);
+
+    await commitPurchaseNotification({
+      type: 'item',
+      itemId: String(item.id),
+      buyerUsername: username,
+      sellerUsername: item.createdBy || '',
+      price: cost,
+      itemTitle: item.title || item.name || '',
+      itemData: item,
+      purchasedAt: new Date(),
+      isRead: false,
+      readAt: null
+    });
 
     const { password, ...safeUser } = savedUser;
     res.json(safeUser);

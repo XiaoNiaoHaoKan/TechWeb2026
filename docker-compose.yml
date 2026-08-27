@@ -12,7 +12,7 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - "8002:8002"
     environment:
       MONGODB_URI: "mongodb://mongo:27017/artaround"
       MONGO_DB_NAME: "artaround"

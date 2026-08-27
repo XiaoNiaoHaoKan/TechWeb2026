@@ -118,6 +118,12 @@ async function findUser(username, password) {
   return stripMongoId(user);
 }
 
+// Notifies Jack's staff dashboard (reads the same "marketplace_purchases" collection).
+async function commitPurchaseNotification(notification) {
+  await db.collection('marketplace_purchases').insertOne(notification);
+  return notification;
+}
+
 async function listUsers() {
   const users = await fetchCollection('users');
   return users.map(({ password, ...user }) => user);
@@ -139,5 +145,6 @@ module.exports = {
   deleteVisit,
   deleteItem,
   findUser,
-  listUsers
+  listUsers,
+  commitPurchaseNotification
 };
