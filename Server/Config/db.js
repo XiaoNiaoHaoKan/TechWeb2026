@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
     try {
-        const uri = "mongodb://site252614:Oejachu0@mongo_site252614:27017/site252614?authSource=admin";
+        // Shared "artaround" MongoDB database, same one used by Jack and Luigi's servers.
+        const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/artaround";
 
         await mongoose.connect(uri);
 

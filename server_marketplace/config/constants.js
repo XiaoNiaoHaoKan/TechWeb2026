@@ -19,7 +19,8 @@ const ACCOUNT_FILES = {
 };
 const MARKETPLACE_ROOT = path.join(ROOT_DIR, 'museum_marketplace');
 const PORT = process.env.PORT || 8000;
-const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || '';
+// Shared MongoDB database "artaround", same one used by the Jack and Luigi servers.
+const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/artaround';
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'artaround';
 
 module.exports = {

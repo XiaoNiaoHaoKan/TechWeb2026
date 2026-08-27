@@ -12,9 +12,7 @@ process.on('SIGINT', async () => {
 repository.connectMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`ArtAround Marketplace server avviato su http://localhost:${PORT}`);
-    if (repository.useMongo) {
-      console.log(`Connesso a MongoDB su ${MONGO_URI}`);
-    }
+    console.log(`Connesso a MongoDB su ${MONGO_URI}`);
   });
 }).catch((error) => {
   console.error('Errore durante la connessione a MongoDB:', error);
