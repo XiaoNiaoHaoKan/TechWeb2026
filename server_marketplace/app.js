@@ -17,7 +17,11 @@ function createApp() {
   app.use(express.static(ROOT_DIR));
 
   app.use((req, res) => {
-    res.status(404).sendFile(path.join(ROOT_DIR, 'marketplace.html'));
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'Endpoint API non trovato.' });
+    }
+
+    return res.sendFile(path.join(ROOT_DIR, 'marketplace.html'));
   });
 
   return app;
