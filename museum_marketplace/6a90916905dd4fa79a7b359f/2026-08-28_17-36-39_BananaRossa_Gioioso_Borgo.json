@@ -1,0 +1,29 @@
+{
+  "museumId": "6a90916905dd4fa79a7b359f",
+  "title": "BananaRossa",
+  "author": "IO",
+  "duration": "15s",
+  "language": "infantile",
+  "price": 80,
+  "license": "CC BY-NC",
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Red_banana_in_Tanzania_0196_Nevit.jpg/500px-Red_banana_in_Tanzania_0196_Nevit.jpg",
+  "objectName": "Oggetto museale non specificato",
+  "objectId": "Red_banana",
+  "creationDate": "",
+  "style": "",
+  "technique": "",
+  "materials": "",
+  "provenance": "",
+  "description": "Contenuto creato per un oggetto museale",
+  "room": "Sala editor",
+  "tags": [],
+  "narratives": [
+    {
+      "level": "infantile",
+      "duration": "15s",
+      "text": "Banana rossa come la mela"
+    }
+  ],
+  "id": "item-040",
+  "createdBy": "Gioioso"
+}
